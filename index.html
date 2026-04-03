@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PMP Study Tracker — PMBOK 8th Edition — Flexible Duration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-deep:#0a0c10;--bg-surface:#11141b;--bg-card:#181c27;--bg-card-hover:#1e2332;
+  --border:#252a3a;--border-bright:#3a4158;
+  --text:#d4d8e8;--text-dim:#7a819a;--text-bright:#f0f2fa;
+  --accent:#14b8a6;--accent-glow:#14b8a633;--accent-dim:#134e4a;
+  --red:#ff6b6b;--orange:#ffa94d;--green:#51cf66;--blue:#5c9dff;--purple:#b197fc;
+  --yellow:#ffd43b;--teal:#2dd4bf;
+  --sidebar-w:300px;--header-h:60px;
+  --mod1:#1a1f3a;--mod2:#1a2a2a;--mod3:#2a1a2a;--mod4:#1a2530;--mod5:#252a1a;--mod6:#2a2a1a;--mod7:#2a1a1a;--mod8:#1a2a1a;
+  --mod1-border:#4f46e5;--mod2-border:#14b8a6;--mod3-border:#a855f7;--mod4-border:#0ea5e9;--mod5-border:#eab308;--mod6-border:#ef4444;--mod7-border:#22c55e;--mod8-border:#ec4899;
+}
+[data-theme="light"]{
+  --bg-deep:#f5f7fa;--bg-surface:#ffffff;--bg-card:#f0f2f5;--bg-card-hover:#e8eaed;
+  --border:#d0d5dd;--border-bright:#b0b5bd;
+  --text:#1a1a2e;--text-dim:#5a5a7a;--text-bright:#0a0a1e;
+  --accent:#0d9488;--accent-glow:#0d948822;--accent-dim:#ccfbf1;
+  --red:#dc2626;--orange:#ea580c;--green:#16a34a;--blue:#2563eb;--purple:#7c3aed;
+  --yellow:#ca8a04;--teal:#0d9488;
+  --mod1:#eef2ff;--mod2:#f0fdfa;--mod3:#faf5ff;--mod4:#f0f9ff;--mod5:#fefce8;--mod6:#fef2f2;--mod7:#f0fdf4;--mod8:#fdf2f8;
+  --mod1-border:#6366f1;--mod2-border:#14b8a6;--mod3-border:#a855f7;--mod4-border:#0ea5e9;--mod5-border:#eab308;--mod6-border:#ef4444;--mod7-border:#22c55e;--mod8-border:#ec4899;
+}
+html{scroll-behavior:smooth;background:var(--bg-deep)}
+body{font-family:'Outfit',sans-serif;color:var(--text);background:var(--bg-deep);line-height:1.65;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.top-bar{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--bg-surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;z-index:1000;gap:16px}
+.top-bar .logo{font-weight:800;font-size:15px;color:var(--text-bright);white-space:nowrap;display:flex;align-items:center;gap:8px}
+.top-bar .logo span{color:var(--accent)}
+.top-bar .logo .badge{font-size:10px;background:var(--accent-dim);color:var(--accent);padding:2px 7px;border-radius:4px;font-weight:600;letter-spacing:.5px}
+.top-bar .logo .version-badge{font-size:9px;background:var(--accent);color:#fff;padding:2px 6px;border-radius:4px;font-weight:700;margin-left:4px}
+.progress-wrap{flex:1;max-width:480px;display:flex;align-items:center;gap:12px}
+.progress-bar-outer{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-bar-inner{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:3px;transition:width .5s}
+.progress-text{font-size:13px;color:var(--text-dim);font-weight:500;white-space:nowrap;font-family:'JetBrains Mono',monospace}
+.top-actions{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+.btn-sm{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-dim);font-size:12px;font-family:'Outfit',sans-serif;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-sm:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm.danger:hover{border-color:var(--red);color:var(--red)}
+.btn-sm.save{border-color:var(--green);color:var(--green)}
+.btn-sm.load{border-color:var(--blue);color:var(--blue)}
+.btn-sm.active{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg-card);border:1px solid var(--border);color:var(--text-bright);padding:12px 24px;border-radius:10px;font-size:14px;font-weight:500;z-index:9999;opacity:0;transition:all .35s ease;pointer-events:none;display:flex;align-items:center;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:var(--green)}.toast.success .toast-icon{color:var(--green)}
+.toast.error{border-color:var(--red)}.toast.error .toast-icon{color:var(--red)}
+.toast.info{border-color:var(--blue)}.toast.info .toast-icon{color:var(--blue)}
+.hamburger{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;padding:4px 8px}
+.sidebar{position:fixed;top:var(--header-h);left:0;width:var(--sidebar-w);height:calc(100vh - var(--header-h));background:var(--bg-surface);border-right:1px solid var(--border);overflow-y:auto;z-index:900;padding:16px 0;transition:transform .3s}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sidebar .nav-section{padding:8px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-dim);margin-top:8px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:13px;color:var(--text-dim);cursor:pointer;transition:all .15s;border-left:2px solid transparent;font-weight:400}
+.nav-item:hover{background:var(--bg-card);color:var(--text)}
+.nav-item.completed .nav-check{color:var(--green)}
+.nav-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;transition:all .3s}
+.nav-item.completed .nav-check{border-color:var(--green);background:var(--green);color:var(--bg-deep)}
+.nav-pct{margin-left:auto;font-size:11px;font-family:'JetBrains Mono',monospace;opacity:.6}
+.day-label{font-size:9px;background:var(--purple);color:var(--bg-deep);padding:1px 5px;border-radius:3px;margin-left:auto;font-weight:600}
+.note-count{font-size:10px;color:var(--orange);margin-left:4px}
+.main{margin-left:var(--sidebar-w);margin-top:var(--header-h);padding:32px 40px 80px;max-width:1000px}
+.module{margin-bottom:40px;border:1px solid var(--border);border-radius:12px;background:var(--bg-surface);overflow:hidden}
+.module[data-mod="1"]{background:var(--mod1);border-color:var(--mod1-border)}
+.module[data-mod="2"]{background:var(--mod2);border-color:var(--mod2-border)}
+.module[data-mod="3"]{background:var(--mod3);border-color:var(--mod3-border)}
+.module[data-mod="4"]{background:var(--mod4);border-color:var(--mod4-border)}
+.module[data-mod="5"]{background:var(--mod5);border-color:var(--mod5-border)}
+.module[data-mod="6"]{background:var(--mod6);border-color:var(--mod6-border)}
+.module[data-mod="7"]{background:var(--mod7);border-color:var(--mod7-border)}
+.module[data-mod="8"]{background:var(--mod8);border-color:var(--mod8-border)}
+.module[data-mod="practice"]{background:var(--bg-card);border-color:var(--yellow)}
+.module[data-mod="gap"]{background:var(--bg-card);border-color:var(--red)}
+.module[data-mod="final"]{background:var(--bg-card);border-color:var(--green)}
+.module-header{padding:20px 24px;cursor:pointer;display:flex;align-items:center;gap:16px;transition:background .2s;user-select:none}
+.module-header:hover{background:var(--bg-card)}
+.module-number{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--bg-deep);background:var(--accent);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.module.completed .module-number{background:var(--green)}
+.module-title{font-size:18px;font-weight:700;color:var(--text-bright);flex:1}
+.module-meta{display:flex;align-items:center;gap:12px}
+.module-pct{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim)}
+.module-mini-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.module-mini-bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s}
+.module.completed .module-mini-bar-fill{background:var(--green)}
+.module-chevron{color:var(--text-dim);font-size:18px;transition:transform .3s}
+.module.open .module-chevron{transform:rotate(180deg)}
+.module-body{display:none;padding:0 24px 24px;border-top:1px solid var(--border)}
+.module.open .module-body{display:block}
+.module-weight{font-size:11px;background:var(--orange);color:var(--bg-deep);padding:2px 6px;border-radius:4px;font-weight:600}
+.module-v9{font-size:10px;color:var(--teal);margin-left:8px;font-weight:500}
+.module-cpim{font-size:10px;color:var(--orange);margin-left:8px;font-weight:500}
+.module-pmbok{font-size:9px;color:var(--text-dim);display:block;margin-top:4px;line-height:1.4}
+.module-pmbok .p6{color:var(--blue)}
+.module-pmbok .p7{color:var(--purple)}
+.topic-group{margin-top:16px}
+.topic-group-title{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.step{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.step:last-child{border-bottom:none}
+.step-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--border-bright);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:2px;transition:all .2s;font-size:13px;color:transparent;position:relative}
+.step-check:hover{border-color:var(--accent);background:var(--accent-glow)}
+.step-check.checked{border-color:var(--green);background:var(--green);color:var(--bg-deep)}
+.step-check.has-note::after{content:'';position:absolute;top:-3px;right:-3px;width:8px;height:8px;background:var(--orange);border-radius:50%;border:2px solid var(--bg-surface)}
+.step-content{flex:1;min-width:0}
+.step-content.checked-text{opacity:.55}
+.step-content.checked-text .step-title{text-decoration:line-through;text-decoration-color:var(--text-dim)}
+.step-header{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.step-title{font-weight:600;font-size:14px;color:var(--text-bright)}
+.step-desc{font-size:13px;color:var(--text-dim);line-height:1.6}
+.tag{font-size:10px;padding:2px 6px;border-radius:3px;font-weight:600;margin-left:4px}
+.tag.high{background:var(--red);color:#fff}
+.tag.medium{background:var(--orange);color:var(--bg-deep)}
+.tag.formula{background:var(--purple);color:#fff}
+.key-terms{margin-top:8px;padding:8px 12px;background:var(--bg-card);border-radius:6px;border-left:3px solid var(--blue)}
+.key-terms-label{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.key-terms-list{font-size:12px;color:var(--text);line-height:1.8}
+.key-terms-list .term{display:inline-block;background:var(--bg-deep);padding:2px 8px;border-radius:4px;margin:2px 4px 2px 0;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px}
+.note-btn{background:none;border:1px solid var(--border);color:var(--text-dim);font-size:12px;padding:2px 8px;border-radius:5px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;flex-shrink:0}
+.note-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+.note-btn.has-note{border-color:var(--orange);color:var(--orange)}
+.note-btn.open{border-color:var(--accent);color:var(--accent)}
+.note-area{margin-top:8px;display:none}
+.note-area.open{display:block}
+.note-area textarea{width:100%;min-height:60px;max-height:200px;padding:10px 12px;background:var(--bg-deep);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;line-height:1.5;resize:vertical;outline:none;transition:border-color .2s}
+.note-area textarea:focus{border-color:var(--accent)}
+.note-area textarea::placeholder{color:var(--text-dim);opacity:.5}
+.note-saved{font-size:11px;color:var(--green);margin-top:4px;opacity:0;transition:opacity .3s}
+.note-saved.show{opacity:1}
+.day-header{background:linear-gradient(135deg,var(--day-bg-start),var(--day-bg-end));border:2px solid var(--day-border);border-radius:14px;padding:24px 28px;margin-bottom:28px;display:flex;align-items:center;gap:20px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.day-header[data-day="1"]{--day-bg-start:#1e3a5f;--day-bg-end:#0d1f33;--day-border:#3b82f6;--day-accent:#60a5fa}
+.day-header[data-day="2"]{--day-bg-start:#1e4d4d;--day-bg-end:#0d2626;--day-border:#14b8a6;--day-accent:#2dd4bf}
+.day-header[data-day="3"]{--day-bg-start:#4a1e5c;--day-bg-end:#2a0d33;--day-border:#a855f7;--day-accent:#c084fc}
+.day-header[data-day="4"]{--day-bg-start:#5c1e1e;--day-bg-end:#330d0d;--day-border:#ef4444;--day-accent:#f87171}
+.day-header[data-day="5"]{--day-bg-start:#5c4a1e;--day-bg-end:#332a0d;--day-border:#f59e0b;--day-accent:#fbbf24}
+.day-header[data-day="6"]{--day-bg-start:#1e5c3a;--day-bg-end:#0d3320;--day-border:#22c55e;--day-accent:#4ade80}
+.day-header[data-day="7"]{--day-bg-start:#5c1e4a;--day-bg-end:#330d26;--day-border:#ec4899;--day-accent:#f472b6}
+.day-header[data-day="8"]{--day-bg-start:#1e2e5c;--day-bg-end:#0d1833;--day-border:#6366f1;--day-accent:#818cf8}
+.day-header[data-day="9"]{--day-bg-start:#3a5c1e;--day-bg-end:#203a0d;--day-border:#84cc16;--day-accent:#a3e635}
+.day-header[data-day="10"]{--day-bg-start:#5c5c1e;--day-bg-end:#33330d;--day-border:#eab308;--day-accent:#facc15}
+.day-header[data-day="11"]{--day-bg-start:#1e3a5f;--day-bg-end:#0d1f33;--day-border:#3b82f6;--day-accent:#60a5fa}
+.day-header[data-day="12"]{--day-bg-start:#1e4d4d;--day-bg-end:#0d2626;--day-border:#14b8a6;--day-accent:#2dd4bf}
+.day-header[data-day="13"]{--day-bg-start:#4a1e5c;--day-bg-end:#2a0d33;--day-border:#a855f7;--day-accent:#c084fc}
+.day-header[data-day="14"]{--day-bg-start:#5c1e1e;--day-bg-end:#330d0d;--day-border:#ef4444;--day-accent:#f87171}
+[data-theme="light"] .day-header[data-day="1"]{--day-bg-start:#dbeafe;--day-bg-end:#eff6ff;--day-border:#3b82f6;--day-accent:#2563eb}
+[data-theme="light"] .day-header[data-day="2"]{--day-bg-start:#ccfbf1;--day-bg-end:#f0fdfa;--day-border:#14b8a6;--day-accent:#0d9488}
+[data-theme="light"] .day-header[data-day="3"]{--day-bg-start:#f3e8ff;--day-bg-end:#faf5ff;--day-border:#a855f7;--day-accent:#9333ea}
+[data-theme="light"] .day-header[data-day="4"]{--day-bg-start:#fee2e2;--day-bg-end:#fef2f2;--day-border:#ef4444;--day-accent:#dc2626}
+[data-theme="light"] .day-header[data-day="5"]{--day-bg-start:#fef3c7;--day-bg-end:#fffbeb;--day-border:#f59e0b;--day-accent:#d97706}
+[data-theme="light"] .day-header[data-day="6"]{--day-bg-start:#dcfce7;--day-bg-end:#f0fdf4;--day-border:#22c55e;--day-accent:#16a34a}
+[data-theme="light"] .day-header[data-day="7"]{--day-bg-start:#fce7f3;--day-bg-end:#fdf2f8;--day-border:#ec4899;--day-accent:#db2777}
+[data-theme="light"] .day-header[data-day="8"]{--day-bg-start:#e0e7ff;--day-bg-end:#eef2ff;--day-border:#6366f1;--day-accent:#4f46e5}
+[data-theme="light"] .day-header[data-day="9"]{--day-bg-start:#ecfccb;--day-bg-end:#f7fee7;--day-border:#84cc16;--day-accent:#65a30d}
+[data-theme="light"] .day-header[data-day="10"]{--day-bg-start:#fef9c3;--day-bg-end:#fefce8;--day-border:#eab308;--day-accent:#ca8a04}
+[data-theme="light"] .day-header[data-day="11"]{--day-bg-start:#dbeafe;--day-bg-end:#eff6ff;--day-border:#3b82f6;--day-accent:#2563eb}
+[data-theme="light"] .day-header[data-day="12"]{--day-bg-start:#ccfbf1;--day-bg-end:#f0fdfa;--day-border:#14b8a6;--day-accent:#0d9488}
+[data-theme="light"] .day-header[data-day="13"]{--day-bg-start:#f3e8ff;--day-bg-end:#faf5ff;--day-border:#a855f7;--day-accent:#9333ea}
+[data-theme="light"] .day-header[data-day="14"]{--day-bg-start:#fee2e2;--day-bg-end:#fef2f2;--day-border:#ef4444;--day-accent:#dc2626}
+.day-number{font-size:42px;font-weight:900;color:var(--day-accent,var(--accent));font-family:'JetBrains Mono',monospace;text-shadow:0 2px 8px rgba(0,0,0,.3);letter-spacing:-2px}
+.day-info h2{font-size:22px;font-weight:800;color:var(--text-bright);margin-bottom:6px;letter-spacing:-0.5px}
+.day-info p{font-size:13px;color:var(--text);font-weight:500}
+.day-hours{margin-left:auto;font-size:15px;color:var(--day-accent,var(--orange));font-weight:700;background:rgba(0,0,0,.2);padding:8px 14px;border-radius:8px;white-space:nowrap}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:24px 16px 80px}
+  .hamburger{display:block}
+  .top-bar .logo .full-title{display:none}
+  .progress-wrap{max-width:200px}
+}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:899}
+.sidebar-overlay.show{display:block}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg-deep)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.module-body{animation:fadeIn .25s ease}
+.exam-info{background:linear-gradient(135deg,var(--bg-card) 0%,var(--accent-dim) 100%);border:1px solid var(--accent);border-radius:12px;padding:20px;margin-bottom:32px}
+.exam-info h3{font-size:16px;font-weight:700;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.exam-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:12px}
+.exam-stat{background:var(--bg-deep);border-radius:8px;padding:12px;text-align:center}
+.exam-stat-value{font-size:22px;font-weight:800;color:var(--text-bright);font-family:'JetBrains Mono',monospace}
+.exam-stat-label{font-size:10px;color:var(--text-dim);margin-top:4px}
+.duration-selector{margin-top:16px;padding:16px;background:var(--bg-deep);border-radius:8px;border:1px solid var(--border)}
+.duration-selector label{font-size:13px;font-weight:600;color:var(--text-bright);display:block;margin-bottom:8px}
+.duration-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.duration-input{display:flex;align-items:center;gap:8px}
+.duration-input input{width:70px;padding:8px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text-bright);font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;text-align:center}
+.duration-input input:focus{outline:none;border-color:var(--accent)}
+.duration-presets{display:flex;gap:6px;flex-wrap:wrap}
+.preset-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-dim);font-size:12px;font-family:'Outfit',sans-serif;font-weight:500;cursor:pointer;transition:all .2s}
+.preset-btn:hover{border-color:var(--accent);color:var(--accent)}
+.preset-btn.active{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+.duration-summary{margin-top:12px;padding:10px;background:var(--bg-card);border-radius:6px;font-size:12px;color:var(--text);display:flex;gap:16px;flex-wrap:wrap}
+.duration-summary strong{color:var(--accent)}
+.unit-selector{display:flex;gap:4px}
+.unit-btn{padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-dim);font-size:11px;font-family:'Outfit',sans-serif;font-weight:500;cursor:pointer;transition:all .2s}
+.unit-btn:hover{border-color:var(--accent);color:var(--accent)}
+.unit-btn.active{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+.version-note{margin-top:12px;padding:10px;background:var(--bg-card);border-radius:6px;border-left:3px solid var(--orange);font-size:11px;color:var(--text)}
+.version-note strong{color:var(--orange)}
+/* Login Screen */
+.login-overlay{position:fixed;inset:0;background:var(--bg-deep);z-index:10000;display:flex;align-items:center;justify-content:center}
+.login-overlay.hidden{display:none}
+.login-box{background:var(--bg-surface);border:1px solid var(--border);border-radius:16px;padding:40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-logo h1{font-size:28px;font-weight:800;color:var(--text-bright);margin-bottom:8px}
+.login-logo h1 span{color:var(--accent)}
+.login-logo p{font-size:13px;color:var(--text-dim)}
+.login-form{display:flex;flex-direction:column;gap:16px}
+.login-field{display:flex;flex-direction:column;gap:6px}
+.login-field label{font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px}
+.login-field input{padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-bright);font-family:'Outfit',sans-serif;font-size:15px;outline:none;transition:border-color .2s}
+.login-field input:focus{border-color:var(--accent)}
+.login-field input::placeholder{color:var(--text-dim);opacity:.5}
+.login-btn{padding:14px 24px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;margin-top:8px}
+.login-btn:hover{opacity:.9;transform:translateY(-1px)}
+.login-error{background:rgba(255,107,107,.1);border:1px solid var(--red);border-radius:8px;padding:12px;color:var(--red);font-size:13px;text-align:center;display:none}
+.login-error.show{display:block}
+.app-container{display:none}
+.app-container.visible{display:block}
+.user-info{font-size:11px;color:var(--text-dim);margin-right:8px;display:flex;align-items:center;gap:6px}
+.user-info .user-email{color:var(--accent);font-weight:500}
+.btn-logout{border-color:var(--orange);color:var(--orange)}
+.btn-logout:hover{background:rgba(255,169,77,.1)}
+/* Admin Panel */
+.admin-panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:10001;display:flex;align-items:center;justify-content:center}
+.admin-panel-overlay.hidden{display:none}
+.admin-panel{background:var(--bg-surface);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:600px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.admin-panel h2{font-size:20px;font-weight:700;color:var(--text-bright);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.admin-panel h2 .admin-badge{font-size:10px;background:var(--red);color:#fff;padding:2px 8px;border-radius:4px}
+.admin-section{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.admin-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.admin-section h3{font-size:14px;font-weight:600;color:var(--accent);margin-bottom:12px}
+.admin-users-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.admin-user-row{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg-card);border-radius:8px;border:1px solid var(--border)}
+.admin-user-row .email{flex:1;font-size:13px;color:var(--text)}
+.admin-user-row .role{font-size:10px;padding:2px 6px;border-radius:4px;background:var(--accent-dim);color:var(--accent)}
+.admin-user-row .role.admin{background:var(--red);color:#fff}
+.admin-user-row .btn-delete{background:none;border:1px solid var(--red);color:var(--red);padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer}
+.admin-user-row .btn-delete:hover{background:rgba(255,107,107,.1)}
+.admin-add-form{display:flex;flex-direction:column;gap:12px}
+.admin-add-row{display:flex;gap:8px}
+.admin-add-row input{flex:1;padding:10px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text-bright);font-family:'Outfit',sans-serif;font-size:13px}
+.admin-add-row input:focus{outline:none;border-color:var(--accent)}
+.admin-add-row select{padding:10px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text-bright);font-family:'Outfit',sans-serif;font-size:13px}
+.admin-btn{padding:10px 20px;border-radius:6px;border:none;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.admin-btn.primary{background:var(--accent);color:#fff}
+.admin-btn.primary:hover{opacity:.9}
+.admin-btn.secondary{background:var(--bg-card);border:1px solid var(--border);color:var(--text)}
+.admin-btn.secondary:hover{border-color:var(--accent);color:var(--accent)}
+.admin-btn.commit{background:var(--green);color:#fff}
+.admin-btn.commit:hover{opacity:.9}
+.admin-token-section{margin-top:16px;padding:16px;background:var(--bg-deep);border-radius:8px;border:1px solid var(--border)}
+.admin-token-section label{font-size:12px;font-weight:600;color:var(--text-dim);display:block;margin-bottom:8px}
+.admin-token-section input{width:100%;padding:10px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text-bright);font-family:'JetBrains Mono',monospace;font-size:12px}
+.admin-token-section input:focus{outline:none;border-color:var(--accent)}
+.admin-token-help{font-size:11px;color:var(--text-dim);margin-top:8px}
+.admin-token-help a{color:var(--accent)}
+.admin-status{padding:12px;border-radius:6px;font-size:13px;margin-top:12px}
+.admin-status.success{background:rgba(81,207,102,.1);border:1px solid var(--green);color:var(--green)}
+.admin-status.error{background:rgba(255,107,107,.1);border:1px solid var(--red);color:var(--red)}
+.admin-status.hidden{display:none}
+.admin-repo-info{display:flex;gap:8px;margin-bottom:12px}
+.admin-repo-info input{flex:1;padding:8px 12px;background:var(--bg-card);border:1px solid var(--border);border-radius:6px;color:var(--text-bright);font-family:'JetBrains Mono',monospace;font-size:12px}
+.btn-admin{border-color:var(--purple);color:var(--purple)}
+.btn-admin:hover{background:rgba(177,151,252,.1)}
+/* Font Size */
+.font-size-controls{display:flex;align-items:center;gap:4px;margin-right:8px}
+.font-size-controls .btn-font{width:28px;height:28px;padding:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.font-size-label{font-size:10px;color:var(--text-dim);font-family:'JetBrains Mono',monospace}
+html{--font-scale:1}
+html[data-font="xs"]{--font-scale:0.8}
+html[data-font="sm"]{--font-scale:0.9}
+html[data-font="md"]{--font-scale:1}
+html[data-font="lg"]{--font-scale:1.1}
+html[data-font="xl"]{--font-scale:1.2}
+.module-title{font-size:calc(18px * var(--font-scale))}
+.module-body,.step-desc,.step-title{font-size:calc(14px * var(--font-scale))}
+.topic-group-title{font-size:calc(14px * var(--font-scale))}
+.day-info h2{font-size:calc(22px * var(--font-scale))}
+.day-info p{font-size:calc(13px * var(--font-scale))}
+.key-terms-list{font-size:calc(12px * var(--font-scale))}
+.exam-info h3{font-size:calc(16px * var(--font-scale))}
+.nav-item{font-size:calc(13px * var(--font-scale))}
+/* Mobile Menu */
+.menu-toggle{display:none;background:none;border:1px solid var(--border);color:var(--text);font-size:18px;cursor:pointer;padding:6px 10px;border-radius:6px}
+.mobile-menu{display:none;position:absolute;top:calc(var(--header-h) - 4px);right:16px;background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;padding:12px;min-width:200px;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:1001;flex-direction:column;gap:8px}
+.mobile-menu.show{display:flex}
+.mobile-menu .btn-sm{width:100%;justify-content:center;text-align:center}
+.mobile-menu .menu-section{display:flex;gap:6px;flex-wrap:wrap}
+.mobile-menu .menu-divider{height:1px;background:var(--border);margin:4px 0}
+.mobile-menu .user-info{padding:8px 0;border-bottom:1px solid var(--border);margin-bottom:4px}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:24px 16px 80px}
+  .hamburger{display:block}
+  .top-bar .logo .full-title{display:none}
+  .progress-wrap{max-width:200px}
+  .top-actions{display:none}
+  .menu-toggle{display:block}
+}
+@media(max-width:480px){
+  .progress-wrap{max-width:120px}
+  .top-bar{padding:0 12px;gap:8px}
+  .day-header{padding:16px;gap:12px}
+  .day-number{font-size:28px}
+  .day-info h2{font-size:16px}
+}
+/* Carousel Mode */
+.view-toggle{display:flex;gap:4px;margin-left:auto}
+.view-btn{padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-dim);font-size:11px;cursor:pointer;transition:all .2s}
+.view-btn:hover{border-color:var(--accent);color:var(--accent)}
+.view-btn.active{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+.carousel-container{position:relative;overflow:hidden}
+.carousel-nav{display:flex;justify-content:space-between;align-items:center;padding:16px 0;margin-bottom:16px}
+.carousel-nav-btn{width:48px;height:48px;border-radius:50%;border:2px solid var(--border);background:var(--bg-card);color:var(--text);font-size:20px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.carousel-nav-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+.carousel-nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.carousel-indicator{display:flex;align-items:center;gap:12px}
+.carousel-dots{display:flex;gap:6px}
+.carousel-dot{width:10px;height:10px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .2s}
+.carousel-dot:hover{background:var(--text-dim)}
+.carousel-dot.active{background:var(--accent);transform:scale(1.2)}
+.carousel-label{font-size:14px;font-weight:600;color:var(--text-bright);font-family:'JetBrains Mono',monospace}
+.carousel-slide{display:none;animation:slideIn .3s ease}
+.carousel-slide.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInReverse{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+.carousel-slide.slide-reverse{animation:slideInReverse .3s ease}
+.carousel-swipe-hint{text-align:center;font-size:11px;color:var(--text-dim);padding:8px 0;display:none}
+@media(max-width:900px){.carousel-swipe-hint{display:block}}
+.list-view .carousel-nav,.list-view .carousel-swipe-hint{display:none}
+.list-view .carousel-slide{display:block;animation:none}
+.carousel-view .main{padding-bottom:120px}
+</style>
+</head>
+<body>
+<!-- Login Screen -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <h1><span>PMP</span> 8.0</h1>
+      <p>Study Tracker — Sign in to continue</p>
+    </div>
+    <div class="login-error" id="loginError">Invalid email or password</div>
+    <div class="login-form">
+      <div class="login-field">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="login-field">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="login-btn" id="loginBtn" onclick="attemptLogin()">Sign In</button>
+    </div>
+  </div>
+</div>
+
+<!-- App Container -->
+<div class="app-container" id="appContainer">
+<header class="top-bar">
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+  <div class="logo"><span>PMP</span> <span class="full-title">Study Tracker</span><span class="badge" id="daysBadge">10-DAY</span><span class="version-badge">PMBOK 8</span></div>
+  <div class="progress-wrap">
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+    <span class="progress-text" id="progressText">0%</span>
+  </div>
+  <div class="top-actions">
+    <span class="user-info">👤 <span class="user-email" id="userEmail"></span></span>
+    <div class="font-size-controls">
+      <button class="btn-sm btn-font" onclick="changeFontSize(-1)" title="Decrease font size">A-</button>
+      <span class="font-size-label" id="fontSizeLabel">100%</span>
+      <button class="btn-sm btn-font" onclick="changeFontSize(1)" title="Increase font size">A+</button>
+    </div>
+    <button class="btn-sm btn-admin" id="adminBtn" onclick="openAdminPanel()" style="display:none">⚙️ Users</button>
+    <button class="btn-sm btn-logout" onclick="logout()">Logout</button>
+    <button class="btn-sm theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">🌓</button>
+    <button class="btn-sm" onclick="collapseAll()">Collapse</button>
+    <button class="btn-sm" onclick="expandAll()">Expand</button>
+    <button class="btn-sm save" onclick="exportProgress()">💾 Save</button>
+    <button class="btn-sm load" onclick="document.getElementById('importFile').click()">📂 Load</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importProgress(event)">
+    <button class="btn-sm danger" onclick="resetAll()">Reset</button>
+  </div>
+  <button class="menu-toggle" onclick="toggleMobileMenu()">⋮</button>
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="user-info">👤 <span class="user-email" id="userEmailMobile"></span></div>
+    <div class="menu-section">
+      <button class="btn-sm btn-font" onclick="changeFontSize(-1)">A-</button>
+      <span class="font-size-label" id="fontSizeLabelMobile">100%</span>
+      <button class="btn-sm btn-font" onclick="changeFontSize(1)">A+</button>
+    </div>
+    <div class="menu-divider"></div>
+    <button class="btn-sm btn-admin" id="adminBtnMobile" onclick="openAdminPanel();toggleMobileMenu()" style="display:none">⚙️ Manage Users</button>
+    <button class="btn-sm" onclick="toggleTheme();toggleMobileMenu()">🌓 Theme</button>
+    <button class="btn-sm" onclick="collapseAll();toggleMobileMenu()">Collapse All</button>
+    <button class="btn-sm" onclick="expandAll();toggleMobileMenu()">Expand All</button>
+    <div class="menu-divider"></div>
+    <button class="btn-sm save" onclick="exportProgress();toggleMobileMenu()">💾 Save Progress</button>
+    <button class="btn-sm load" onclick="document.getElementById('importFileMobile').click()">📂 Load Progress</button>
+    <input type="file" id="importFileMobile" accept=".json" style="display:none" onchange="importProgress(event);toggleMobileMenu()">
+    <div class="menu-divider"></div>
+    <button class="btn-sm danger" onclick="resetAll();toggleMobileMenu()">Reset Progress</button>
+    <button class="btn-sm btn-logout" onclick="logout()">Logout</button>
+  </div>
+</header>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<nav class="sidebar" id="sidebar"></nav>
+<div class="toast" id="toast"><span class="toast-icon"></span><span class="toast-msg"></span></div>
+<main class="main" id="mainContent"></main>
+</div>
+
+<!-- Admin Panel Modal -->
+<div class="admin-panel-overlay hidden" id="adminPanelOverlay" onclick="if(event.target===this)closeAdminPanel()">
+  <div class="admin-panel">
+    <h2>👥 User Management <span class="admin-badge">ADMIN</span></h2>
+    <div class="admin-section">
+      <h3>Current Users</h3>
+      <div class="admin-users-list" id="adminUsersList"></div>
+    </div>
+    <div class="admin-section">
+      <h3>Add New User</h3>
+      <div class="admin-add-form">
+        <div class="admin-add-row">
+          <input type="email" id="newUserEmail" placeholder="email@example.com">
+          <input type="text" id="newUserPassword" placeholder="password">
+          <select id="newUserRole">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button class="admin-btn primary" onclick="addUser()">+ Add User</button>
+      </div>
+    </div>
+    <div class="admin-section">
+      <h3>💾 Commit to GitHub</h3>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px">Push changes to your repository so they persist.</p>
+      <div class="admin-repo-info">
+        <input type="text" id="repoOwner" placeholder="github-username">
+        <input type="text" id="repoName" placeholder="repo-name">
+        <input type="text" id="repoBranch" placeholder="branch (main)">
+      </div>
+      <div class="admin-token-section">
+        <label>GitHub Personal Access Token</label>
+        <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx">
+        <div class="admin-token-help">Need a token? <a href="https://github.com/settings/tokens/new?scopes=repo&description=PMP%20Tracker" target="_blank">Create one here</a> (select 'repo' scope)</div>
+      </div>
+      <button class="admin-btn commit" onclick="commitToGitHub()" style="margin-top:12px;width:100%">🚀 Commit & Push users.csv</button>
+      <div class="admin-status hidden" id="adminStatus"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:16px">
+      <button class="admin-btn secondary" onclick="closeAdminPanel()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== USER CREDENTIALS ==========
+let validUsers = {};
+let usersLoaded = false;
+const FALLBACK_USERS = {
+  'hala.elouarrak@toronto.ascm.org': { password: 'Teitoklein1124', role: 'admin' }
+};
+
+async function loadUsersCSV() {
+  try {
+    const response = await fetch('users.csv');
+    if (!response.ok) throw new Error('CSV not found');
+    const csv = await response.text();
+    parseCSV(csv);
+    usersLoaded = true;
+  } catch (e) {
+    console.warn('CSV fetch failed, using fallback credentials (local mode)');
+    validUsers = { ...FALLBACK_USERS };
+    usersLoaded = true;
+  }
+}
+
+function parseCSV(csv) {
+  validUsers = {};
+  const lines = csv.trim().split('\n');
+  const header = lines[0].toLowerCase();
+  const hasRole = header.includes('role');
+  for (let i = 1; i < lines.length; i++) {
+    const parts = lines[i].split(',').map(s => s.trim());
+    const email = parts[0];
+    const password = parts[1];
+    const role = hasRole && parts[2] ? parts[2].toLowerCase() : 'user';
+    if (email && password) validUsers[email.toLowerCase()] = { password, role };
+  }
+}
+
+function generateCSV() {
+  let csv = 'email,password,role\n';
+  for (const [email, data] of Object.entries(validUsers)) csv += `${email},${data.password},${data.role}\n`;
+  return csv.trim();
+}
+
+let currentUser = null;
+function isAdmin() { return currentUser && validUsers[currentUser] && validUsers[currentUser].role === 'admin'; }
+
+async function attemptLogin() {
+  if (!usersLoaded) await loadUsersCSV();
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const password = document.getElementById('loginPassword').value;
+  const errorEl = document.getElementById('loginError');
+  if (validUsers[email] && validUsers[email].password === password) {
+    currentUser = email;
+    localStorage.setItem('pmp_user', email);
+    errorEl.classList.remove('show');
+    showApp();
+  } else {
+    errorEl.textContent = 'Invalid email or password';
+    errorEl.classList.add('show');
+    document.getElementById('loginPassword').value = '';
+  }
+}
+
+function showApp() {
+  document.getElementById('loginOverlay').classList.add('hidden');
+  document.getElementById('appContainer').classList.add('visible');
+  document.getElementById('userEmail').textContent = currentUser;
+  document.getElementById('userEmailMobile').textContent = currentUser;
+  const isAdminUser = isAdmin();
+  document.getElementById('adminBtn').style.display = isAdminUser ? 'inline-block' : 'none';
+  document.getElementById('adminBtnMobile').style.display = isAdminUser ? 'block' : 'none';
+  initApp();
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('pmp_user');
+  document.getElementById('loginOverlay').classList.remove('hidden');
+  document.getElementById('appContainer').classList.remove('visible');
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginError').classList.remove('show');
+}
+
+async function checkSession() {
+  await loadUsersCSV();
+  const savedUser = localStorage.getItem('pmp_user');
+  if (savedUser && validUsers[savedUser]) { currentUser = savedUser; showApp(); }
+}
+
+function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('show'); }
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('mobileMenu');
+  const toggle = document.querySelector('.menu-toggle');
+  if (menu && toggle && !menu.contains(e.target) && !toggle.contains(e.target)) menu.classList.remove('show');
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('loginEmail').addEventListener('keypress', e => { if (e.key === 'Enter') document.getElementById('loginPassword').focus(); });
+  document.getElementById('loginPassword').addEventListener('keypress', e => { if (e.key === 'Enter') attemptLogin(); });
+  checkSession();
+});
+
+// ========== ADMIN PANEL ==========
+function openAdminPanel() { if (!isAdmin()) return; document.getElementById('adminPanelOverlay').classList.remove('hidden'); renderUsersList(); }
+function closeAdminPanel() { document.getElementById('adminPanelOverlay').classList.add('hidden'); document.getElementById('adminStatus').classList.add('hidden'); }
+
+function renderUsersList() {
+  const list = document.getElementById('adminUsersList');
+  let html = '';
+  for (const [email, data] of Object.entries(validUsers)) {
+    const isCurrentUser = email === currentUser;
+    html += `<div class="admin-user-row"><span class="email">${email}</span><span class="role ${data.role}">${data.role.toUpperCase()}</span>${!isCurrentUser ? `<button class="btn-delete" onclick="deleteUser('${email}')">Delete</button>` : '<span style="font-size:11px;color:var(--text-dim)">(you)</span>'}</div>`;
+  }
+  list.innerHTML = html || '<p style="color:var(--text-dim);font-size:13px">No users found</p>';
+}
+
+function addUser() {
+  const email = document.getElementById('newUserEmail').value.trim().toLowerCase();
+  const password = document.getElementById('newUserPassword').value.trim();
+  const role = document.getElementById('newUserRole').value;
+  if (!email || !password) { showAdminStatus('Email and password required', 'error'); return; }
+  if (validUsers[email]) { showAdminStatus('User already exists', 'error'); return; }
+  validUsers[email] = { password, role };
+  document.getElementById('newUserEmail').value = '';
+  document.getElementById('newUserPassword').value = '';
+  renderUsersList();
+  showAdminStatus('User added (commit to save permanently)', 'success');
+}
+
+function deleteUser(email) {
+  if (email === currentUser) { showAdminStatus("Can't delete yourself", 'error'); return; }
+  if (confirm(`Delete user ${email}?`)) { delete validUsers[email]; renderUsersList(); showAdminStatus('User deleted (commit to save permanently)', 'success'); }
+}
+
+function showAdminStatus(msg, type) { const status = document.getElementById('adminStatus'); status.textContent = msg; status.className = 'admin-status ' + type; }
+
+async function commitToGitHub() {
+  const owner = document.getElementById('repoOwner').value.trim();
+  const repo = document.getElementById('repoName').value.trim();
+  const branch = document.getElementById('repoBranch').value.trim() || 'main';
+  const token = document.getElementById('githubToken').value.trim();
+  if (!owner || !repo || !token) { showAdminStatus('Fill in owner, repo name, and token', 'error'); return; }
+  const csvContent = generateCSV();
+  try {
+    showAdminStatus('Fetching current file...', 'success');
+    let sha = null;
+    try {
+      const getRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/users.csv?ref=${branch}`, { headers: { 'Authorization': `token ${token}` } });
+      if (getRes.ok) { const data = await getRes.json(); sha = data.sha; }
+    } catch (e) {}
+    showAdminStatus('Committing...', 'success');
+    const body = { message: 'Update users.csv via PMP Tracker admin panel', content: btoa(csvContent), branch };
+    if (sha) body.sha = sha;
+    const putRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/users.csv`, { method: 'PUT', headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (putRes.ok) { showAdminStatus('✓ Committed successfully!', 'success'); document.getElementById('githubToken').value = ''; }
+    else { const err = await putRes.json(); showAdminStatus(`Error: ${err.message}`, 'error'); }
+  } catch (e) { showAdminStatus(`Error: ${e.message}`, 'error'); }
+}
+
+// ========== STATE VARIABLES ==========
+let state = {};
+let openNotes = new Set();
+let studyPeriods = 10;
+let timeUnit = 'day';
+let viewMode = 'list';
+let currentSlide = 0;
+
+
+// ========== RAW MODULE DATA (PMBOK 8th Edition - Jan 2026) ==========
+// All 49 PMBOK 6th Edition processes mapped to PMBOK 8 Performance Domains
+const allModules = [
+  {
+    id: 'governance', number: '1', title: 'Governance', weight: 14, hours: 6,
+    pmbok6: '↔ PMBOK 6: Integration Management (7 processes) + Quality Management (3 processes)',
+    pmbok7: '↔ PMBOK 7: Uncertainty Domain, Delivery Domain',
+    topics: [
+      { group: 'Integration Management — Initiating', items: [
+        { id: '4.1', title: '4.1 Develop Project Charter', desc: 'Develop document that formally authorizes project and provides PM with authority', priority: 'high', terms: ['project charter', 'business case', 'agreements', 'enterprise environmental factors', 'OPAs'] }
+      ]},
+      { group: 'Integration Management — Planning', items: [
+        { id: '4.2', title: '4.2 Develop Project Management Plan', desc: 'Define, prepare, and coordinate all subsidiary plans into integrated PM plan', priority: 'high', terms: ['project management plan', 'baselines', 'subsidiary plans', 'change management plan', 'configuration management plan'] }
+      ]},
+      { group: 'Integration Management — Executing', items: [
+        { id: '4.3', title: '4.3 Direct and Manage Project Work', desc: 'Lead and perform work defined in PM plan, implement approved changes', priority: 'high', terms: ['deliverables', 'work performance data', 'issue log', 'change requests', 'PM plan updates'] },
+        { id: '4.4', title: '4.4 Manage Project Knowledge', desc: 'Use existing knowledge and create new knowledge for project and organization', priority: 'medium', terms: ['lessons learned register', 'knowledge management', 'information management', 'explicit knowledge', 'tacit knowledge'] }
+      ]},
+      { group: 'Integration Management — Monitoring & Controlling', items: [
+        { id: '4.5', title: '4.5 Monitor and Control Project Work', desc: 'Track, review, report overall progress to meet performance objectives', priority: 'high', terms: ['work performance reports', 'change requests', 'forecasts', 'variance analysis'] },
+        { id: '4.6', title: '4.6 Perform Integrated Change Control', desc: 'Review all change requests, approve/reject changes, manage changes to deliverables', priority: 'high', terms: ['change control board (CCB)', 'approved change requests', 'change log', 'configuration management'] }
+      ]},
+      { group: 'Integration Management — Closing', items: [
+        { id: '4.7', title: '4.7 Close Project or Phase', desc: 'Finalize all activities, formally complete project or phase', priority: 'medium', terms: ['final report', 'lessons learned', 'project archives', 'product transition', 'organizational process assets updates'] }
+      ]},
+      { group: 'Quality Management (embedded in PMBOK 8 Governance)', items: [
+        { id: '8.1', title: '8.1 Plan Quality Management', desc: 'Identify quality requirements/standards and document compliance approach', priority: 'high', terms: ['quality management plan', 'quality metrics', 'cost of quality', 'benchmarking', 'design of experiments'] },
+        { id: '8.2', title: '8.2 Manage Quality', desc: 'Translate quality plan into executable activities, perform quality audits', priority: 'high', terms: ['quality audits', 'process analysis', 'root cause analysis', 'design for X', 'quality reports'] },
+        { id: '8.3', title: '8.3 Control Quality', desc: 'Monitor and record results of quality activities to assess performance', priority: 'high', terms: ['inspection', 'testing', 'control charts', 'cause-and-effect diagrams', 'histograms', 'scatter diagrams'] }
+      ]}
+    ]
+  },
+  {
+    id: 'scope', number: '2', title: 'Scope', weight: 14, hours: 5,
+    pmbok6: '↔ PMBOK 6: Scope Management (6 processes)',
+    pmbok7: '↔ PMBOK 7: Planning Domain, Delivery Domain',
+    topics: [
+      { group: 'Scope Management — Planning', items: [
+        { id: '5.1', title: '5.1 Plan Scope Management', desc: 'Create scope management plan documenting how scope will be defined, validated, controlled', priority: 'medium', terms: ['scope management plan', 'requirements management plan'] },
+        { id: '5.2', title: '5.2 Collect Requirements', desc: 'Determine, document, and manage stakeholder needs and requirements', priority: 'high', terms: ['requirements documentation', 'requirements traceability matrix', 'interviews', 'focus groups', 'questionnaires', 'benchmarking'] },
+        { id: '5.3', title: '5.3 Define Scope', desc: 'Develop detailed description of project and product scope', priority: 'high', terms: ['project scope statement', 'product analysis', 'alternatives generation', 'acceptance criteria'] },
+        { id: '5.4', title: '5.4 Create WBS', desc: 'Subdivide project deliverables and work into smaller, manageable components', priority: 'high', terms: ['work breakdown structure', 'WBS dictionary', 'work packages', 'planning packages', 'decomposition', 'scope baseline'] }
+      ]},
+      { group: 'Scope Management — Monitoring & Controlling', items: [
+        { id: '5.5', title: '5.5 Validate Scope', desc: 'Formalize acceptance of completed project deliverables', priority: 'high', terms: ['accepted deliverables', 'inspection', 'decision making', 'verified deliverables'] },
+        { id: '5.6', title: '5.6 Control Scope', desc: 'Monitor project and product scope status and manage changes to scope baseline', priority: 'high', terms: ['scope creep', 'gold plating', 'variance analysis', 'trend analysis', 'work performance information'] }
+      ]},
+      { group: 'Agile Scope Practices', items: [
+        { id: 's.agile', title: 'Agile Scope Management', desc: 'Product backlog, user stories, story points, backlog refinement, definition of done', priority: 'high', terms: ['product backlog', 'user stories', 'story points', 'backlog refinement', 'definition of done', 'MoSCoW', 'minimum viable product'] }
+      ]}
+    ]
+  },
+  {
+    id: 'schedule', number: '3', title: 'Schedule', weight: 14, hours: 5,
+    pmbok6: '↔ PMBOK 6: Schedule Management (6 processes)',
+    pmbok7: '↔ PMBOK 7: Planning Domain, Project Work Domain',
+    topics: [
+      { group: 'Schedule Management — Planning', items: [
+        { id: '6.1', title: '6.1 Plan Schedule Management', desc: 'Establish policies, procedures, documentation for planning and managing schedule', priority: 'medium', terms: ['schedule management plan', 'scheduling methodology', 'level of accuracy', 'units of measure', 'control thresholds'] },
+        { id: '6.2', title: '6.2 Define Activities', desc: 'Identify and document specific actions to be performed to produce deliverables', priority: 'high', terms: ['activity list', 'activity attributes', 'milestone list', 'rolling wave planning', 'decomposition'] },
+        { id: '6.3', title: '6.3 Sequence Activities', desc: 'Identify and document relationships among project activities', priority: 'high', terms: ['project schedule network diagrams', 'precedence diagramming method (PDM)', 'dependency determination', 'leads and lags', 'FS, FF, SS, SF'] },
+        { id: '6.4', title: '6.4 Estimate Activity Durations', desc: 'Estimate number of work periods needed to complete activities', priority: 'high', terms: ['analogous estimating', 'parametric estimating', 'three-point estimating', 'PERT', 'bottom-up estimating', 'reserve analysis'] },
+        { id: '6.5', title: '6.5 Develop Schedule', desc: 'Analyze activity sequences, durations, requirements, constraints to create schedule model', priority: 'high', terms: ['critical path method', 'resource optimization', 'schedule compression', 'crashing', 'fast tracking', 'schedule baseline', 'Gantt chart'] }
+      ]},
+      { group: 'Schedule Management — Monitoring & Controlling', items: [
+        { id: '6.6', title: '6.6 Control Schedule', desc: 'Monitor project status to update schedule and manage changes to schedule baseline', priority: 'high', terms: ['schedule variance (SV)', 'schedule performance index (SPI)', 'earned value analysis', 'iteration burndown', 'trend analysis'] }
+      ]},
+      { group: 'Agile Schedule Practices', items: [
+        { id: 'sch.agile', title: 'Agile Schedule Management', desc: 'Iteration/sprint planning, velocity, release planning, timeboxing', priority: 'high', terms: ['sprint planning', 'velocity', 'release planning', 'timebox', 'iteration', 'burndown chart', 'burnup chart'] }
+      ]}
+    ]
+  },
+  {
+    id: 'finance', number: '4', title: 'Finance', weight: 14, hours: 5,
+    pmbok6: '↔ PMBOK 6: Cost Management (4 processes)',
+    pmbok7: '↔ PMBOK 7: Planning Domain, Measurement Domain',
+    topics: [
+      { group: 'Cost Management — Planning', items: [
+        { id: '7.1', title: '7.1 Plan Cost Management', desc: 'Establish policies, procedures, documentation for planning and managing costs', priority: 'medium', terms: ['cost management plan', 'units of measure', 'level of precision', 'level of accuracy', 'control thresholds'] },
+        { id: '7.2', title: '7.2 Estimate Costs', desc: 'Develop approximation of monetary resources needed to complete project activities', priority: 'high', terms: ['cost estimates', 'basis of estimates', 'analogous estimating', 'parametric estimating', 'bottom-up estimating', 'three-point estimating', 'contingency reserve'] },
+        { id: '7.3', title: '7.3 Determine Budget', desc: 'Aggregate estimated costs to establish authorized cost baseline', priority: 'high', terms: ['cost baseline', 'project funding requirements', 'cost aggregation', 'reserve analysis', 'S-curve', 'management reserve'] }
+      ]},
+      { group: 'Cost Management — Monitoring & Controlling', items: [
+        { id: '7.4', title: '7.4 Control Costs', desc: 'Monitor project status to update costs and manage changes to cost baseline', priority: 'high', terms: ['earned value management', 'cost variance (CV)', 'cost performance index (CPI)', 'to-complete performance index (TCPI)', 'forecasting'] }
+      ]},
+      { group: 'Earned Value Management (EVM) Formulas', items: [
+        { id: 'evm', title: 'EVM Calculations', desc: 'PV, EV, AC, SV, CV, SPI, CPI, EAC, ETC, VAC, TCPI formulas and interpretation', priority: 'formula', terms: ['planned value (PV)', 'earned value (EV)', 'actual cost (AC)', 'EAC', 'ETC', 'VAC', 'TCPI', 'BAC'] }
+      ]},
+      { group: 'Business Value & Benefits', items: [
+        { id: 'benefits', title: 'Benefits Realization', desc: 'ROI, NPV, IRR, payback period, benefit-cost ratio, opportunity cost', priority: 'high', terms: ['ROI', 'NPV', 'IRR', 'payback period', 'benefit-cost ratio', 'sunk cost', 'opportunity cost'] }
+      ]}
+    ]
+  },
+  {
+    id: 'stakeholders', number: '5', title: 'Stakeholders', weight: 14, hours: 5,
+    pmbok6: '↔ PMBOK 6: Stakeholder Management (4 processes) + Communications Management (3 processes)',
+    pmbok7: '↔ PMBOK 7: Stakeholders Domain, Team Domain',
+    topics: [
+      { group: 'Stakeholder Management — Initiating', items: [
+        { id: '13.1', title: '13.1 Identify Stakeholders', desc: 'Identify project stakeholders and analyze their interests, involvement, influence', priority: 'high', terms: ['stakeholder register', 'stakeholder analysis', 'power/interest grid', 'power/influence grid', 'salience model'] }
+      ]},
+      { group: 'Stakeholder Management — Planning', items: [
+        { id: '13.2', title: '13.2 Plan Stakeholder Engagement', desc: 'Develop strategies to effectively engage stakeholders based on needs and interests', priority: 'high', terms: ['stakeholder engagement plan', 'stakeholder engagement assessment matrix', 'communication requirements'] }
+      ]},
+      { group: 'Stakeholder Management — Executing', items: [
+        { id: '13.3', title: '13.3 Manage Stakeholder Engagement', desc: 'Communicate and work with stakeholders to meet needs and address issues', priority: 'high', terms: ['interpersonal and team skills', 'conflict management', 'cultural awareness', 'negotiation', 'political awareness'] }
+      ]},
+      { group: 'Stakeholder Management — Monitoring & Controlling', items: [
+        { id: '13.4', title: '13.4 Monitor Stakeholder Engagement', desc: 'Monitor stakeholder relationships and adjust strategies for engaging stakeholders', priority: 'medium', terms: ['data analysis', 'decision making', 'stakeholder engagement assessment matrix updates'] }
+      ]},
+      { group: 'Communications Management (embedded in PMBOK 8 Stakeholders)', items: [
+        { id: '10.1', title: '10.1 Plan Communications Management', desc: 'Develop approach for project communications based on stakeholder information needs', priority: 'high', terms: ['communications management plan', 'communication requirements analysis', 'communication channels', 'communication methods'] },
+        { id: '10.2', title: '10.2 Manage Communications', desc: 'Ensure timely and appropriate collection, creation, distribution of project information', priority: 'high', terms: ['project communications', 'push communication', 'pull communication', 'interactive communication'] },
+        { id: '10.3', title: '10.3 Monitor Communications', desc: 'Ensure information needs of project and stakeholders are met', priority: 'medium', terms: ['work performance information', 'change requests', 'communication barriers'] }
+      ]}
+    ]
+  },
+  {
+    id: 'resources', number: '6', title: 'Resources', weight: 15, hours: 6,
+    pmbok6: '↔ PMBOK 6: Resource Management (6 processes) + Procurement Management (3 processes)',
+    pmbok7: '↔ PMBOK 7: Team Domain, Project Work Domain',
+    topics: [
+      { group: 'Resource Management — Planning', items: [
+        { id: '9.1', title: '9.1 Plan Resource Management', desc: 'Define how to estimate, acquire, manage, and utilize physical and team resources', priority: 'high', terms: ['resource management plan', 'team charter', 'RACI matrix', 'organizational charts', 'resource breakdown structure'] },
+        { id: '9.2', title: '9.2 Estimate Activity Resources', desc: 'Estimate team resources and type/quantities of materials, equipment, supplies', priority: 'high', terms: ['resource requirements', 'basis of estimates', 'resource breakdown structure', 'bottom-up estimating', 'analogous estimating'] }
+      ]},
+      { group: 'Resource Management — Executing', items: [
+        { id: '9.3', title: '9.3 Acquire Resources', desc: 'Obtain team members, facilities, equipment, materials, supplies, other resources', priority: 'high', terms: ['physical resource assignments', 'project team assignments', 'resource calendars', 'virtual teams', 'pre-assignment', 'negotiation'] },
+        { id: '9.4', title: '9.4 Develop Team', desc: 'Improve competencies, team member interaction, team environment to enhance performance', priority: 'high', terms: ['Tuckman ladder', 'team building', 'training', 'colocation', 'recognition and rewards', 'team performance assessments'] },
+        { id: '9.5', title: '9.5 Manage Team', desc: 'Track team member performance, provide feedback, resolve issues, manage changes', priority: 'high', terms: ['conflict management', 'influencing', 'motivation', 'leadership styles', 'emotional intelligence'] }
+      ]},
+      { group: 'Resource Management — Monitoring & Controlling', items: [
+        { id: '9.6', title: '9.6 Control Resources', desc: 'Ensure physical resources assigned and allocated are available as planned', priority: 'medium', terms: ['resource leveling', 'resource smoothing', 'what-if scenario analysis', 'resource optimization'] }
+      ]},
+      { group: 'Procurement Management (embedded in PMBOK 8 Resources)', items: [
+        { id: '12.1', title: '12.1 Plan Procurement Management', desc: 'Document procurement decisions, specify approach, identify potential sellers', priority: 'high', terms: ['procurement management plan', 'procurement strategy', 'make-or-buy decisions', 'source selection criteria', 'bid documents'] },
+        { id: '12.2', title: '12.2 Conduct Procurements', desc: 'Obtain seller responses, select seller, award contract', priority: 'high', terms: ['selected sellers', 'agreements', 'RFI', 'RFP', 'RFQ', 'IFB', 'proposal evaluation techniques', 'bidder conferences'] },
+        { id: '12.3', title: '12.3 Control Procurements', desc: 'Manage procurement relationships, monitor contract performance, make changes/corrections', priority: 'high', terms: ['contract types', 'FFP', 'FPIF', 'CPFF', 'CPIF', 'T&M', 'claims administration', 'inspections and audits'] }
+      ]},
+      { group: 'Agile Team Practices', items: [
+        { id: 'r.agile', title: 'Agile Team Management', desc: 'Self-organizing teams, servant leadership, cross-functional teams, psychological safety', priority: 'high', terms: ['self-organizing teams', 'servant leadership', 'cross-functional', 'T-shaped skills', 'psychological safety', 'Scrum Master', 'Product Owner'] }
+      ]}
+    ]
+  },
+  {
+    id: 'risk', number: '7', title: 'Risk', weight: 15, hours: 6,
+    pmbok6: '↔ PMBOK 6: Risk Management (7 processes)',
+    pmbok7: '↔ PMBOK 7: Uncertainty Domain, Measurement Domain',
+    topics: [
+      { group: 'Risk Management — Planning', items: [
+        { id: '11.1', title: '11.1 Plan Risk Management', desc: 'Define how to conduct risk management activities for project', priority: 'medium', terms: ['risk management plan', 'risk categories', 'RBS', 'probability and impact matrix', 'risk appetite', 'risk tolerance', 'risk threshold'] },
+        { id: '11.2', title: '11.2 Identify Risks', desc: 'Identify individual project risks and sources of overall project risk', priority: 'high', terms: ['risk register', 'risk report', 'brainstorming', 'checklists', 'interviews', 'SWOT analysis', 'assumptions and constraints analysis'] },
+        { id: '11.3', title: '11.3 Perform Qualitative Risk Analysis', desc: 'Prioritize risks for further analysis or action by assessing probability and impact', priority: 'high', terms: ['probability and impact assessment', 'probability and impact matrix', 'risk data quality assessment', 'risk categorization', 'risk urgency assessment'] },
+        { id: '11.4', title: '11.4 Perform Quantitative Risk Analysis', desc: 'Numerically analyze combined effect of identified risks on overall project objectives', priority: 'formula', terms: ['Monte Carlo simulation', 'decision tree analysis', 'expected monetary value (EMV)', 'sensitivity analysis', 'tornado diagram'] },
+        { id: '11.5', title: '11.5 Plan Risk Responses', desc: 'Develop options, select strategies, agree on actions to address overall project risk exposure', priority: 'high', terms: ['threats: avoid, transfer, mitigate, accept, escalate', 'opportunities: exploit, share, enhance, accept, escalate', 'contingent response strategies', 'secondary risks', 'residual risks'] }
+      ]},
+      { group: 'Risk Management — Executing', items: [
+        { id: '11.6', title: '11.6 Implement Risk Responses', desc: 'Implement agreed-upon risk response plans', priority: 'high', terms: ['risk owners', 'risk action owners', 'workarounds', 'risk triggers'] }
+      ]},
+      { group: 'Risk Management — Monitoring & Controlling', items: [
+        { id: '11.7', title: '11.7 Monitor Risks', desc: 'Monitor implementation of risk response plans, track identified risks, identify new risks', priority: 'high', terms: ['risk audits', 'risk reviews', 'variance and trend analysis', 'technical performance analysis', 'reserve analysis'] }
+      ]}
+    ]
+  }
+];
+
+const practiceModules = [
+  {
+    id: 'practice', number: '✓', title: 'Practice Exam & Final Review', weight: 0, hours: 8,
+    topics: [
+      { group: 'Domain Reviews', items: [
+        { id: 'prac1', title: 'Governance & Scope Review', desc: 'Integration (7) + Quality (3) + Scope (6) = 16 processes', priority: 'high', terms: [] },
+        { id: 'prac2', title: 'Schedule & Finance Review', desc: 'Schedule (6) + Cost (4) = 10 processes + EVM formulas', priority: 'high', terms: [] },
+        { id: 'prac3', title: 'Stakeholders Review', desc: 'Stakeholder (4) + Communications (3) = 7 processes', priority: 'high', terms: [] },
+        { id: 'prac4', title: 'Resources Review', desc: 'Resource (6) + Procurement (3) = 9 processes + contract types', priority: 'high', terms: [] },
+        { id: 'prac5', title: 'Risk Management Review', desc: 'Risk (7) processes + EMV, Monte Carlo, decision trees', priority: 'high', terms: [] }
+      ]},
+      { group: 'Exam Simulation', items: [
+        { id: 'prac6', title: 'Agile/Hybrid Scenarios', desc: 'Scrum, Kanban, SAFe, XP, hybrid approaches — ~50% of exam', priority: 'high', terms: [] },
+        { id: 'prac7', title: 'Full Practice Exam', desc: '185 questions, 240 minutes (new format effective Jul 9, 2026)', priority: 'high', terms: [] }
+      ]}
+    ]
+  }
+];
+
+const TOTAL_STUDY_HOURS = allModules.reduce((s, m) => s + m.hours, 0) + practiceModules.reduce((s, m) => s + m.hours, 0);
+const PRACTICE_HOURS = practiceModules.reduce((s, m) => s + m.hours, 0);
+const TIME_UNIT_LABELS = {
+  day: { singular: 'Day', plural: 'Days', abbrev: 'DAY', perLabel: 'day' },
+  week: { singular: 'Week', plural: 'Weeks', abbrev: 'WK', perLabel: 'week' },
+  month: { singular: 'Month', plural: 'Months', abbrev: 'MO', perLabel: 'month' }
+};
+const STORAGE_KEY = 'pmp_flex_tracker_v1';
+
+// ========== PLAN GENERATION ==========
+function generateStudyPlan(numPeriods) {
+  if (numPeriods >= allModules.length) return generateExpandedPlan(numPeriods);
+  return generateCompressedPlan(numPeriods);
+}
+
+function generateExpandedPlan(numPeriods) {
+  const totalMods = allModules.length, studyPeriods = numPeriods - 1;
+  if (studyPeriods <= 0) return [{ id: 'period1', period: 1, title: 'Complete PMP Review', hours: TOTAL_STUDY_HOURS, focus: 'All 7 domains + practice', modules: [...allModules, ...practiceModules] }];
+  const plan = [], periodsPerMod = Math.floor(studyPeriods / totalMods), extra = studyPeriods % totalMods;
+  let periodNum = 1;
+  allModules.forEach((mod, i) => {
+    const pCount = periodsPerMod + (i < extra ? 1 : 0);
+    if (pCount === 1) {
+      plan.push({ id: `period${periodNum}`, period: periodNum, title: `Module ${mod.number}: ${mod.title.split(' ').slice(0, 4).join(' ')}`, hours: mod.hours, focus: mod.title, modules: [mod] });
+      periodNum++;
+    } else {
+      const topicsPerPeriod = Math.ceil(mod.topics.length / pCount);
+      for (let p = 0; p < pCount; p++) {
+        const topicSlice = mod.topics.slice(p * topicsPerPeriod, (p + 1) * topicsPerPeriod);
+        const sliceHours = (mod.hours / mod.topics.length) * topicSlice.length;
+        plan.push({ id: `period${periodNum}`, period: periodNum, title: `Module ${mod.number} (Part ${p + 1})`, hours: Math.round(sliceHours * 10) / 10, focus: topicSlice.map(t => t.group.split('.')[0]).join(', '), modules: [{ ...mod, topics: topicSlice }] });
+        periodNum++;
+      }
+    }
+  });
+  plan.push({ id: `period${periodNum}`, period: periodNum, title: 'Practice & Final Review', hours: PRACTICE_HOURS, focus: 'Practice exam + gap analysis + rest', modules: practiceModules });
+  return plan;
+}
+
+function generateCompressedPlan(numPeriods) {
+  const hoursPerPeriod = TOTAL_STUDY_HOURS / numPeriods;
+  const plan = [];
+  
+  if (numPeriods === 1) {
+    plan.push({ id: 'period1', period: 1, title: 'Complete PMP Review',
+      hours: Math.round(hoursPerPeriod * 10) / 10, focus: 'All 7 domains + practice',
+      modules: [...allModules, ...practiceModules] });
+  } else {
+    const modulesPerPeriod = Math.ceil(allModules.length / (numPeriods - 1));
+    let modIdx = 0;
+    for (let p = 1; p < numPeriods; p++) {
+      const periodMods = allModules.slice(modIdx, modIdx + modulesPerPeriod);
+      modIdx += modulesPerPeriod;
+      plan.push({ id: `period${p}`, period: p, title: `Modules ${periodMods.map(m => m.number).join(', ')}`,
+        hours: Math.round(periodMods.reduce((s, m) => s + m.hours, 0) * 10) / 10,
+        focus: periodMods.map(m => m.title.split(' ').slice(0, 3).join(' ')).join(' + '), modules: periodMods });
+    }
+    plan.push({ id: `period${numPeriods}`, period: numPeriods, title: 'Practice & Final Review',
+      hours: PRACTICE_HOURS, focus: 'Practice exam + gap analysis + rest', modules: practiceModules });
+  }
+  return plan;
+}
+
+function buildPeriodObject(periodNum, periodData) {
+  const modNums = periodData.modules.map(m => m.number);
+  let title = modNums.length === 1 ? `Module ${modNums[0]}: ${periodData.modules[0].title.split(' ').slice(0, 4).join(' ')}`
+    : modNums.length === 2 ? `Modules ${modNums[0]}-${modNums[1]}` : `Modules ${modNums[0]}-${modNums[modNums.length - 1]}`;
+  return { id: `period${periodNum}`, period: periodNum, title, hours: Math.round(periodData.totalHours * 10) / 10,
+    focus: periodData.modules.map(m => m.title.split(' ')[0]).join(' + '), modules: periodData.modules };
+}
+
+// ========== STATE MANAGEMENT ==========
+function loadState() {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    if (s) { const data = JSON.parse(s); state = data.state || {}; studyPeriods = data.studyPeriods || 10; timeUnit = data.timeUnit || 'day'; }
+  } catch(e) { state = {}; studyPeriods = 10; timeUnit = 'day'; }
+}
+
+function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ state, studyPeriods, timeUnit })); } catch(e) {} }
+function isChecked(id) { return !!state[id]; }
+function toggleCheck(id) { state[id] = !state[id]; saveState(); updateUI(); }
+function hasNote(id) { return !!state['note_'+id]; }
+function getNote(id) { return state['note_'+id] || ''; }
+
+function saveNote(id) {
+  const ta = document.getElementById('note_ta_'+id); if (!ta) return;
+  const val = ta.value.trim();
+  if (val) state['note_'+id] = val; else delete state['note_'+id];
+  saveState();
+  const saved = document.getElementById('note_saved_'+id);
+  if (saved) { saved.classList.add('show'); setTimeout(() => saved.classList.remove('show'), 1500); }
+  const checkEl = document.querySelector(`.step-check[onclick="toggleCheck('${id}')"]`);
+  if (checkEl) {
+    if (val) checkEl.classList.add('has-note');
+    else checkEl.classList.remove('has-note');
+  }
+  const btnEl = document.getElementById('note_btn_'+id);
+  if (btnEl) {
+    if (val) { btnEl.classList.add('has-note'); btnEl.innerHTML = '📝 Note'; }
+    else { btnEl.classList.remove('has-note'); btnEl.innerHTML = '📝'; }
+  }
+  renderSidebar();
+  updateProgress();
+}
+
+function toggleNote(id) {
+  const area = document.getElementById('note_area_'+id), btn = document.getElementById('note_btn_'+id);
+  if (!area) return;
+  const opening = !area.classList.contains('open');
+  if (opening) openNotes.add(id); else openNotes.delete(id);
+  area.classList.toggle('open'); if (btn) btn.classList.toggle('open', opening);
+  if (opening) { const ta = document.getElementById('note_ta_'+id); if(ta) ta.focus(); }
+}
+
+// ========== DURATION CONTROLS ==========
+function setDuration(periods, newUnit = null) {
+  if (newUnit) timeUnit = newUnit;
+  studyPeriods = Math.max(1, Math.min(52, parseInt(periods) || 10));
+  
+  const unit = TIME_UNIT_LABELS[timeUnit];
+  document.getElementById('periodsInput').value = studyPeriods;
+  document.getElementById('daysBadge').textContent = `${studyPeriods}-${unit.abbrev}`;
+  
+  document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.toggle('active', parseInt(btn.dataset.periods) === studyPeriods));
+  
+  const summary = document.getElementById('durationSummary');
+  if (summary) summary.innerHTML = `<span><strong>${TOTAL_STUDY_HOURS.toFixed(1)}</strong> total hours</span><span><strong>${(TOTAL_STUDY_HOURS / studyPeriods).toFixed(1)}</strong> hrs/${unit.perLabel}</span><span><strong>7</strong> domains + practice</span>`;
+  
+  if (viewMode === 'carousel') currentSlide = 0;
+  saveState();
+  updateUI();
+}
+
+function setTimeUnit(newUnit) {
+  timeUnit = newUnit;
+  document.querySelectorAll('.unit-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.unit === timeUnit));
+  setDuration(studyPeriods);
+}
+
+// ========== MODULE CONTROLS ==========
+function toggleModule(modId) { state['open_'+modId] = state['open_'+modId] === false; saveState(); updateUI(); }
+function collapseAll() { [...allModules, ...practiceModules].forEach(m => state['open_'+m.id] = false); saveState(); updateUI(); showToast('All modules collapsed', 'info'); }
+function expandAll() { [...allModules, ...practiceModules].forEach(m => state['open_'+m.id] = true); saveState(); updateUI(); showToast('All modules expanded', 'info'); }
+
+function scrollToPeriod(id) {
+  if (viewMode === 'carousel') {
+    const studyPlan = generateStudyPlan(studyPeriods);
+    const idx = studyPlan.findIndex(p => p.id === id);
+    if (idx >= 0) goToSlide(idx);
+  } else {
+    const el = document.getElementById(id);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); toggleSidebar(); }
+  }
+}
+
+// ========== TOAST ==========
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('toast'), icon = toast.querySelector('.toast-icon'), msgEl = toast.querySelector('.toast-msg');
+  icon.textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+  toast.className = 'toast show ' + type;
+  msgEl.textContent = msg;
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ========== IMPORT/EXPORT ==========
+function exportProgress() {
+  const data = { version: '5.0', exportDate: new Date().toISOString(), state, studyPeriods, timeUnit };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `pmp-progress-${new Date().toISOString().slice(0,10)}.json`; a.click();
+  URL.revokeObjectURL(url);
+  showToast('Progress exported!', 'success');
+}
+
+function importProgress(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.state) { state = data.state; if (data.studyPeriods) studyPeriods = data.studyPeriods; if (data.timeUnit) timeUnit = data.timeUnit; saveState(); updateUI(); showToast('Progress imported!', 'success'); }
+      else throw new Error('Invalid format');
+    } catch (err) { showToast('Import failed: ' + err.message, 'error'); }
+  };
+  reader.readAsText(file);
+}
+
+function resetAll() {
+  if (confirm('Reset all progress? This cannot be undone.')) {
+    state = {}; studyPeriods = 10; timeUnit = 'day'; openNotes.clear(); currentSlide = 0;
+    [...allModules, ...practiceModules].forEach(m => state['open_'+m.id] = true);
+    saveState(); updateUI(); showToast('Progress reset', 'info');
+  }
+}
+
+// ========== RENDER ==========
+function renderSidebar() {
+  const studyPlan = generateStudyPlan(studyPeriods);
+  const unit = TIME_UNIT_LABELS[timeUnit];
+  const sidebar = document.getElementById('sidebar');
+  let html = `<div class="nav-section">${unit.plural}</div>`;
+  studyPlan.forEach(p => {
+    const allItems = []; p.modules.forEach(m => m.topics.forEach(t => t.items.forEach(i => allItems.push(i.id))));
+    const done = allItems.filter(id => isChecked(id)).length, total = allItems.length;
+    const pct = total ? Math.round(done/total*100) : 0, completed = done === total && total > 0;
+    const noteCount = allItems.filter(id => hasNote(id)).length;
+    html += `<div class="nav-item ${completed ? 'completed' : ''}" onclick="scrollToPeriod('${p.id}')"><span class="nav-check">${completed ? '✓' : ''}</span><span>${unit.singular} ${p.period}${noteCount ? `<span class="note-count">📝${noteCount}</span>` : ''}</span><span class="day-label">${p.hours}h</span><span class="nav-pct">${pct}%</span></div>`;
+  });
+  sidebar.innerHTML = html;
+}
+
+function renderMain() {
+  const studyPlan = generateStudyPlan(studyPeriods);
+  const unit = TIME_UNIT_LABELS[timeUnit];
+  const main = document.getElementById('mainContent');
+  const isCarousel = viewMode === 'carousel';
+  
+  let html = `<div class="exam-info"><h3>📋 PMP PMBOK 8 Exam Overview</h3>
+    <div class="exam-info-grid">
+      <div class="exam-stat"><div class="exam-stat-value">185</div><div class="exam-stat-label">Questions</div></div>
+      <div class="exam-stat"><div class="exam-stat-value">240m</div><div class="exam-stat-label">Time Limit</div></div>
+      <div class="exam-stat"><div class="exam-stat-value">Jul 2026</div><div class="exam-stat-label">New Exam</div></div>
+      <div class="exam-stat"><div class="exam-stat-value">8</div><div class="exam-stat-label">Modules</div></div>
+    </div>
+    <div class="duration-selector"><label>⏱️ Study Duration</label>
+      <div class="duration-row">
+        <div class="duration-input">
+          <input type="number" id="periodsInput" value="${studyPeriods}" min="1" max="52" onchange="setDuration(this.value)">
+          <div class="unit-selector">
+            <button class="unit-btn ${timeUnit==='day'?'active':''}" data-unit="day" onclick="setTimeUnit('day')">Days</button>
+            <button class="unit-btn ${timeUnit==='week'?'active':''}" data-unit="week" onclick="setTimeUnit('week')">Weeks</button>
+            <button class="unit-btn ${timeUnit==='month'?'active':''}" data-unit="month" onclick="setTimeUnit('month')">Months</button>
+          </div>
+        </div>
+        <div class="duration-presets">
+          <button class="preset-btn ${studyPeriods===5?'active':''}" data-periods="5" onclick="setDuration(5)">5</button>
+          <button class="preset-btn ${studyPeriods===7?'active':''}" data-periods="7" onclick="setDuration(7)">7</button>
+          <button class="preset-btn ${studyPeriods===10?'active':''}" data-periods="10" onclick="setDuration(10)">10</button>
+          <button class="preset-btn ${studyPeriods===14?'active':''}" data-periods="14" onclick="setDuration(14)">14</button>
+          <button class="preset-btn ${studyPeriods===21?'active':''}" data-periods="21" onclick="setDuration(21)">21</button>
+        </div>
+        <div class="view-toggle">
+          <button class="view-btn ${viewMode==='list'?'active':''}" onclick="setViewMode('list')" title="List view - See all days">☰ List</button>
+          <button class="view-btn ${viewMode==='carousel'?'active':''}" onclick="setViewMode('carousel')" title="Carousel view - One day at a time">◀▶ Flip</button>
+        </div>
+      </div>
+      <div class="duration-summary" id="durationSummary"><span><strong>${TOTAL_STUDY_HOURS.toFixed(1)}</strong> total hours</span><span><strong>${(TOTAL_STUDY_HOURS / studyPeriods).toFixed(1)}</strong> hrs/${unit.perLabel}</span><span><strong>7</strong> domains + practice</span></div>
+    </div>
+  </div>`;
+  
+  if (isCarousel) {
+    html += `<div class="carousel-nav">
+      <button class="carousel-nav-btn" onclick="carouselPrev()" ${currentSlide === 0 ? 'disabled' : ''}>◀</button>
+      <div class="carousel-indicator">
+        <span class="carousel-label">${unit.singular} ${currentSlide + 1} of ${studyPlan.length}</span>
+        <div class="carousel-dots">${studyPlan.map((_, i) => `<div class="carousel-dot ${i === currentSlide ? 'active' : ''}" onclick="goToSlide(${i})"></div>`).join('')}</div>
+      </div>
+      <button class="carousel-nav-btn" onclick="carouselNext()" ${currentSlide === studyPlan.length - 1 ? 'disabled' : ''}>▶</button>
+    </div>
+    <div class="carousel-swipe-hint">👆 Swipe left/right to navigate</div>`;
+  }
+  
+  html += `<div class="carousel-container" id="carouselContainer">`;
+  
+  studyPlan.forEach((p, idx) => {
+    const slideClass = isCarousel ? `carousel-slide ${idx === currentSlide ? 'active' : ''}` : 'carousel-slide active';
+    html += `<div id="${p.id}" class="${slideClass}" data-slide="${idx}"><div class="day-header" data-day="${((p.period - 1) % 14) + 1}"><div class="day-number">${unit.singular.charAt(0)}${p.period}</div><div class="day-info"><h2>${p.title}</h2><p>${p.focus}</p></div><div class="day-hours">${p.hours} hrs</div></div>`;
+    p.modules.forEach(mod => {
+      const allItems = []; mod.topics.forEach(t => t.items.forEach(i => allItems.push(i.id)));
+      const done = allItems.filter(id => isChecked(id)).length, total = allItems.length;
+      const pct = total ? Math.round(done/total*100) : 0, completed = done === total && total > 0;
+      const isOpen = state['open_'+mod.id] !== false;
+      const modType = typeof mod.number === 'number' || typeof mod.number === 'string' ? mod.number : mod.id;
+      
+      html += `<div class="module ${completed ? 'completed' : ''} ${isOpen ? 'open' : ''}" id="module_${mod.id}" data-mod="${modType}">
+        <div class="module-header" onclick="toggleModule('${mod.id}')">
+          <div class="module-number">${mod.number}</div>
+          <div class="module-title">${mod.title}${mod.pmbok6 ? `<div class="module-pmbok"><span class="p6">${mod.pmbok6}</span><br><span class="p7">${mod.pmbok7 || ''}</span></div>` : ''}</div>
+          <span class="module-weight">${mod.weight}${typeof mod.weight === 'number' ? '%' : ''}</span>
+          <div class="module-meta"><span class="module-pct">${pct}%</span><div class="module-mini-bar"><div class="module-mini-bar-fill" style="width:${pct}%"></div></div></div>
+          <span class="module-chevron">▼</span>
+        </div><div class="module-body">`;
+      
+      mod.topics.forEach(topic => {
+        html += `<div class="topic-group"><div class="topic-group-title">${topic.group}</div>`;
+        topic.items.forEach(item => {
+          const checked = isChecked(item.id), noteText = getNote(item.id), noteExists = !!noteText, noteOpen = openNotes.has(item.id);
+          const escapedNote = (noteText || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+          let tag = item.priority === 'high' ? '<span class="tag high">HIGH</span>' : item.priority === 'medium' ? '<span class="tag medium">MEDIUM</span>' : item.priority === 'formula' ? '<span class="tag formula">FORMULA</span>' : '';
+          let termsHtml = item.terms?.length ? `<div class="key-terms"><div class="key-terms-label">Key Terms</div><div class="key-terms-list">${item.terms.map(t => `<span class="term">${t}</span>`).join('')}</div></div>` : '';
+          
+          html += `<div class="step"><div class="step-check ${checked ? 'checked' : ''} ${noteExists ? 'has-note' : ''}" onclick="toggleCheck('${item.id}')">✓</div>
+            <div class="step-content ${checked ? 'checked-text' : ''}">
+              <div class="step-header"><div class="step-title">${item.title}${tag}</div>
+                <button class="note-btn ${noteExists ? 'has-note' : ''} ${noteOpen ? 'open' : ''}" id="note_btn_${item.id}" onclick="toggleNote('${item.id}')">${noteExists ? '📝 Note' : '📝'}</button></div>
+              <div class="note-area ${noteOpen ? 'open' : ''}" id="note_area_${item.id}">
+                <textarea id="note_ta_${item.id}" placeholder="Add your notes here…" oninput="saveNote('${item.id}')">${escapedNote}</textarea>
+                <div class="note-saved" id="note_saved_${item.id}">✓ Saved</div></div>
+              <div class="step-desc">${item.desc}</div>${termsHtml}
+            </div></div>`;
+        });
+        html += '</div>';
+      });
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  main.innerHTML = html;
+  document.body.classList.toggle('carousel-view', isCarousel);
+  document.body.classList.toggle('list-view', !isCarousel);
+  if (isCarousel) setupSwipeGestures();
+}
+
+function updateProgress() {
+  let total = 0, done = 0, notes = 0;
+  [...allModules, ...practiceModules].forEach(m => m.topics.forEach(t => t.items.forEach(i => { total++; if (isChecked(i.id)) done++; if (hasNote(i.id)) notes++; })));
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done}/${total} (${pct}%)${notes ? ` · 📝${notes}` : ''}`;
+}
+
+function updateUI() { renderSidebar(); renderMain(); updateProgress(); }
+
+// ========== CAROUSEL ==========
+function setViewMode(mode) {
+  viewMode = mode;
+  localStorage.setItem('pmp_viewmode', mode);
+  if (mode === 'carousel') currentSlide = 0;
+  updateUI();
+}
+
+function carouselNext() {
+  const studyPlan = generateStudyPlan(studyPeriods);
+  if (currentSlide < studyPlan.length - 1) {
+    currentSlide++;
+    updateCarouselView();
+  }
+}
+
+function carouselPrev() {
+  if (currentSlide > 0) {
+    currentSlide--;
+    updateCarouselView(true);
+  }
+}
+
+function goToSlide(idx) {
+  const studyPlan = generateStudyPlan(studyPeriods);
+  if (idx >= 0 && idx < studyPlan.length) {
+    const reverse = idx < currentSlide;
+    currentSlide = idx;
+    updateCarouselView(reverse);
+  }
+}
+
+function updateCarouselView(reverse = false) {
+  const studyPlan = generateStudyPlan(studyPeriods);
+  const unit = TIME_UNIT_LABELS[timeUnit];
+  const slides = document.querySelectorAll('.carousel-slide');
+  slides.forEach((slide, i) => {
+    slide.classList.remove('active', 'slide-reverse');
+    if (i === currentSlide) {
+      slide.classList.add('active');
+      if (reverse) slide.classList.add('slide-reverse');
+    }
+  });
+  const dots = document.querySelectorAll('.carousel-dot');
+  dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+  const label = document.querySelector('.carousel-label');
+  if (label) label.textContent = `${unit.singular} ${currentSlide + 1} of ${studyPlan.length}`;
+  const prevBtn = document.querySelector('.carousel-nav-btn:first-child');
+  const nextBtn = document.querySelector('.carousel-nav-btn:last-child');
+  if (prevBtn) prevBtn.disabled = currentSlide === 0;
+  if (nextBtn) nextBtn.disabled = currentSlide === studyPlan.length - 1;
+}
+
+function setupSwipeGestures() {
+  const container = document.getElementById('carouselContainer');
+  if (!container) return;
+  let startX = 0, startY = 0, distX = 0, distY = 0;
+  const threshold = 50;
+  container.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  container.addEventListener('touchmove', e => {
+    distX = e.touches[0].clientX - startX;
+    distY = e.touches[0].clientY - startY;
+  }, { passive: true });
+  container.addEventListener('touchend', () => {
+    if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > threshold) {
+      if (distX > 0) carouselPrev();
+      else carouselNext();
+    }
+    distX = 0; distY = 0;
+  });
+}
+
+function loadViewMode() {
+  const saved = localStorage.getItem('pmp_viewmode');
+  if (saved && (saved === 'list' || saved === 'carousel')) viewMode = saved;
+}
+
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('show'); }
+function toggleTheme() {
+  const html = document.documentElement, current = html.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next); localStorage.setItem('pmp_theme', next);
+  showToast(`${next === 'light' ? '☀️ Light' : '🌙 Dark'} mode`, 'info');
+}
+function loadTheme() { const saved = localStorage.getItem('pmp_theme'); if (saved) document.documentElement.setAttribute('data-theme', saved); }
+
+// ========== FONT SIZE ==========
+const FONT_SIZES = ['xs', 'sm', 'md', 'lg', 'xl'];
+const FONT_LABELS = { xs: '80%', sm: '90%', md: '100%', lg: '110%', xl: '120%' };
+let currentFontIdx = 2;
+
+function loadFontSize() {
+  const saved = localStorage.getItem('pmp_fontsize');
+  if (saved && FONT_SIZES.includes(saved)) currentFontIdx = FONT_SIZES.indexOf(saved);
+  applyFontSize();
+}
+
+function applyFontSize() {
+  const size = FONT_SIZES[currentFontIdx];
+  document.documentElement.setAttribute('data-font', size);
+  const label = document.getElementById('fontSizeLabel');
+  const labelMobile = document.getElementById('fontSizeLabelMobile');
+  if (label) label.textContent = FONT_LABELS[size];
+  if (labelMobile) labelMobile.textContent = FONT_LABELS[size];
+}
+
+function changeFontSize(dir) {
+  currentFontIdx = Math.max(0, Math.min(FONT_SIZES.length - 1, currentFontIdx + dir));
+  localStorage.setItem('pmp_fontsize', FONT_SIZES[currentFontIdx]);
+  applyFontSize();
+}
+
+// ========== INIT ==========
+function initApp() {
+  loadState();
+  if (Object.keys(state).length === 0) { [...allModules, ...practiceModules].forEach(m => state['open_'+m.id] = true); saveState(); }
+  const initUnit = TIME_UNIT_LABELS[timeUnit];
+  document.getElementById('daysBadge').textContent = `${studyPeriods}-${initUnit.abbrev}`;
+  updateUI();
+}
+
+loadTheme();
+loadFontSize();
+loadViewMode();
+</script>
+</body>
+</html>
